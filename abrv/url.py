@@ -17,24 +17,14 @@ def register_new_url():
         # json or form content for this request.
         # url = request.form['url']
         url = request.json['url']
-        db = get_db()
 
         error = None
         if not url:
             error = 'URL is required'
 
         if error is None:
-            cursor = db.cursor()
-            cursor.execute(
-                'INSERT INTO urls (url) VALUES (?)', (url,))
-            ins_id = cursor.lastrowid
-            b64_ins_id = id_to_b64(ins_id)
-            cursor.execute(
-                'UPDATE urls SET short_path = ? WHERE id = ?',
-                (b64_ins_id, ins_id))
-            db.commit()
-
-            return 'Inserted as {}\n'.format(b64_ins_id)
+            short_path = get_or_create_short_path(url)
+            return 'Short path: {}\n'.format(short_path)
 
         # TODO: Figure out what this does?
         flash(error)
@@ -42,6 +32,20 @@ def register_new_url():
     return 'Will be render template.'
     # TODO: figure out if this is actually desirable.
     # return render_template()
+
+
+@bp.route('/new/<string:url>')
+def get_new_url(url):
+    error = None
+    if not url:
+        error = 'URL is required'
+
+    # TODO Verify that URL is valid?
+    short_path = get_or_create_short_path(url)
+
+    if error is None:
+        return 'Short path: {}\n'.format(short_path)
+
 
 @bp.route('/<string:id_b64>')
 def process_url_req(id_b64):
@@ -53,12 +57,44 @@ def process_url_req(id_b64):
         return error_res
 
     db = get_db()
-    cursor = db.execute('SELECT url FROM urls WHERE id = ?', (url_id,))
+    try:
+        cursor = db.execute('SELECT url FROM urls WHERE id = ?', (url_id,))
+    except OverflowError:
+        return error_res
+
     row = cursor.fetchone()
     if row is None:
         return error_res
 
-    return redirect(row['url'])
+    return redirect(
+        'http://' + row['url'] if row['url'].find('://') == -1 else row['url']
+    )
+
+
+def get_or_create_short_path(url):
+    url_hash = djb2_hash(url)
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(
+        'SELECT short_path FROM urls WHERE hash = ? and url = ?',
+        (url_hash, url)
+    )
+    row = cursor.fetchone()
+    short_path = None
+    if row is None:
+        cursor.execute(
+            'INSERT INTO urls (url, hash) VALUES (?, ?)', (url, url_hash))
+        ins_id = cursor.lastrowid
+        short_path = id_to_b64(ins_id)
+        cursor.execute(
+            'UPDATE urls SET short_path = ? WHERE id = ?',
+            (short_path, ins_id))
+        db.commit()
+    else:
+        short_path = row['short_path']
+
+    return short_path
 
 
 def b64_to_id(s):
@@ -75,7 +111,15 @@ def b64_to_id(s):
     else:
         return id_
 
+
 def id_to_b64(x):
     return urlsafe_b64encode(
         x.to_bytes((x.bit_length() + 7) // 8, 'big')
     ).replace(b'=', b'').decode('ascii')
+
+
+def djb2_hash(s):
+    h = 5381
+    for c in s:
+        h = ((h << 5) + h) + ord(c)
+    return h & 0xffffffffffffffff
