@@ -1,0 +1,47 @@
+body{
+  padding-top: 15em;
+}
+
+.content{
+  text-align: center;
+  font-size: 200%;
+  font-family: Monospace;
+  color: #1d2731;
+  max-width: 960px; /* TODO: Prevent very long text from running off screen? */
+  margin: auto;
+}
+
+.url-entry-container{
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+
+input#url-entry-bar {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 100%;
+  height: 3em;
+  padding: 0 20px;
+  font-size: 1.5rem;
+  border: 3px solid #d0cfce;
+  outline: none;
+  font-family: Monospace; /* TODO: Figure out why this needs to be specified here as well. */
+}
+
+input#url-entry-bar:focus {
+  border: 3px solid #1d2731;
+  color: #1d2731;
+}
+
+input#url-entry-bar:focus::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+input#url-entry-bar:focus::-moz-placeholder {
+  opacity: 0;
+}
+
+input#url-entry-bar:focus:-ms-placeholder {
+  opacity: 0;
+}

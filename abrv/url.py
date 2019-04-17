@@ -2,7 +2,7 @@ import binascii
 
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
-from flask import Blueprint, redirect, request, flash
+from flask import Blueprint, redirect, request, flash, render_template, g
 
 from .db import get_db
 
@@ -15,36 +15,21 @@ def register_new_url():
     if request.method == 'POST':
         # TODO: Figure out if it would be better to use
         # json or form content for this request.
-        # url = request.form['url']
-        url = request.json['url']
+        url = request.form['url']
+        # url = request.json['url']
 
-        error = None
-        if not url:
-            error = 'URL is required'
-
-        if error is None:
+        if url:
             short_path = get_or_create_short_path(url)
-            return 'Short path: {}\n'.format(short_path)
 
-        # TODO: Figure out what this does?
-        flash(error)
+            if short_path is not None:
+                g.most_recent_url = url
+                g.most_recent_short = '{}{}'.format(request.url_root,
+                                                    short_path)
+        else:
+            # TODO: Use a real error?
+            flash("URL is required.")
 
-    return 'Will be render template.'
-    # TODO: figure out if this is actually desirable.
-    # return render_template()
-
-
-@bp.route('/new/<string:url>')
-def get_new_url(url):
-    error = None
-    if not url:
-        error = 'URL is required'
-
-    # TODO Verify that URL is valid?
-    short_path = get_or_create_short_path(url)
-
-    if error is None:
-        return 'Short path: {}\n'.format(short_path)
+    return render_template('base.html')
 
 
 @bp.route('/<string:id_b64>')
@@ -122,4 +107,4 @@ def djb2_hash(s):
     h = 5381
     for c in s:
         h = ((h << 5) + h) + ord(c)
-    return h & 0xffffffffffffffff
+    return h & 0xfffffffffffffff
