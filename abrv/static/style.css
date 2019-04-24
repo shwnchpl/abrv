@@ -1,12 +1,81 @@
+/* Colorscheme: flat-ui TODO: attribute */
+:root {
+  --color-blk-f:          #2c3e50;
+  --color-blk-b:          #34495e;
+  --color-red-f:          #c0392b;
+  --color-red-b:          #e74c3c;
+  --color-grn-f:          #27ae60;
+  --color-grn-b:          #2ecc71;
+  --color-yel-f:          #f39c12;
+  --color-yel-b:          #f1c40f;
+  --color-blu-f:          #2980b9;
+  --color-blu-b:          #3498db;
+  --color-mag-f:          #8e44ad;
+  --color-mag-b:          #9b59b6;
+  --color-cyn-f:          #7aa085;
+  --color-cyn-b:          #1abc9c;
+  --color-wht-f:          #bdc3c7;
+  --color-wht-b:          #ecf0f1;
+
+  --color-theme-bg:       #181818;
+  --color-theme-fg:       #ecf0f1;
+  --color-theme-cc:       #d35400;
+}
+
+:root {
+  --main-bg-color:                      var(--color-theme-bg);
+  --main-text-color:                    var(--color-grn-f);
+  --link-color:                         var(--color-blu-f);
+  --link-visited-color:                 var(--color-mag-b);
+  --link-hover-color:                   var(--color-yel-f);
+  --link-active-color:                  var(--color-red-f);
+  --url-entry-bar-bg-color:             #cbcbcb; /* hardcoded */
+  --url-entry-bar-border-color:         #d0cfce; /* hardcoded */
+  --url-entry-bar-focus-border-color:   var(--main-text-color);
+  --url-entry-bar-focus-text-color:     var(--main-bg-color);
+}
+
+/* TODO: remove this code.
+:root {
+  --main-bg-color:                      #ededed;
+  --main-text-color:                    #1d2731;
+  --link-color:                         #111111;
+  --link-visited-color:                 var(--link-color);
+  --link-hover-color:                   #cbcbcb;
+  --link-active-color:                  var(--link-hover-color);
+  --url-entry-bar-bg-color:             #cbcbcb;
+  --url-entry-bar-border-color:         #d0cfce;
+  --url-entry-bar-focus-border-color:   var(--main-text-color);
+  --url-entry-bar-focus-text-color:     var(--main-text-color);
+}
+*/
+
 body{
   padding-top: 15em;
+  background-color: var(--main-bg-color);
+}
+
+a:link {
+    color: var(--link-color);
+}
+
+a:visited {
+    color: var(--link-visited-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}
+
+a:active {
+    color: var(--link-active-color);
 }
 
 .content{
   text-align: center;
   font-size: 200%;
   font-family: Monospace;
-  color: #1d2731;
+  color: var(--main-text-color);
   max-width: 960px; /* TODO: Prevent very long text from running off screen? */
   margin: auto;
 }
@@ -19,19 +88,21 @@ body{
 
 input#url-entry-bar {
   box-sizing: border-box;
+  background-color: var(--url-entry-bar-bg-color);
   margin: 0 auto;
   width: 100%;
   height: 3em;
   padding: 0 20px;
+  border-radius: 25px;
   font-size: 1.5rem;
-  border: 3px solid #d0cfce;
+  border: 3px solid var(--url-entry-bar-border-color);
   outline: none;
   font-family: Monospace; /* TODO: Figure out why this needs to be specified here as well. */
 }
 
 input#url-entry-bar:focus {
-  border: 3px solid #1d2731;
-  color: #1d2731;
+  border: 3px solid var(--url-entry-bar-focus-border-color);
+  color: var(--url-entry-bar-focus-text-color);
 }
 
 input#url-entry-bar:focus::-webkit-input-placeholder {
