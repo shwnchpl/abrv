@@ -72,15 +72,12 @@ def get_or_create_short_path(url):
     short_path = None
     if row is None:
         cursor.execute(
-            'INSERT INTO urls (url, hash) VALUES (%s, %s) RETURNING id',
+            'INSERT INTO urls (url, hash, short_path) '
+            'VALUES (%s, %s, i_to_wsb64(lastval())) '
+            'RETURNING short_path',
             (url, url_hash))
-        row = cursor.fetchone() # TODO: Catch an error here and rollback?
-        ins_id = row['id']
-        short_path = id_to_b64(ins_id)
-        print('short_path', short_path)
-        cursor.execute(
-            'UPDATE urls SET short_path = %s WHERE id = %s',
-            (short_path, ins_id))
+        row = cursor.fetchone() # TODO: Catch error and rollback
+        short_path = row['short_path']
         db.commit()
     else:
         short_path = row['short_path']
@@ -105,6 +102,7 @@ def b64_to_id(s):
         return id_
 
 
+# TODO: Remove? Or just use for testing. Possibly no longer needed.
 def id_to_b64(x):
     return urlsafe_b64encode(
         x.to_bytes((x.bit_length() + 7) // 8, 'big')

@@ -3,10 +3,10 @@ DROP INDEX IF EXISTS url_hash_index;
 DROP FUNCTION IF EXISTS i_to_wsb64;
 
 CREATE TABLE urls (
-  id SERIAL PRIMARY KEY,
+  id BIGSERIAL PRIMARY KEY,
   url TEXT NOT NULL,
   hash BIGINT NOT NULL,
-  short_path VARCHAR(32)
+  short_path VARCHAR(32) NOT NULL
 );
 
 CREATE INDEX url_hash_index ON urls (hash);
@@ -25,7 +25,3 @@ LANGUAGE SQL
 IMMUTABLE
 LEAKPROOF
 STRICT;
-
-/* TODO: Insert like this:
-INSERT INTO b64_test (b64) VALUES (i_to_wsb64(lastval()));
-*/
