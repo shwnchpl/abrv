@@ -10,7 +10,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'abrv.db'),
+        # TODO: Move DB config to config.py.
+        DATABASE={'database': 'abrv', 'user': 'moth', 'password': '',}
     )
 
     if test_config is None:

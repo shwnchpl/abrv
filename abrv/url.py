@@ -43,11 +43,14 @@ def process_url_req(id_b64):
 
     db = get_db()
     try:
-        cursor = db.execute('SELECT url FROM urls WHERE id = ?', (url_id,))
+        cursor = db.cursor()
+        cursor.execute('SELECT url FROM urls WHERE id = %s', (url_id,))
     except OverflowError:
         return error_res
 
     row = cursor.fetchone()
+    cursor.close() # TODO: Remove if not needed.
+
     if row is None:
         return error_res
 
@@ -62,22 +65,27 @@ def get_or_create_short_path(url):
     db = get_db()
     cursor = db.cursor()
     cursor.execute(
-        'SELECT short_path FROM urls WHERE hash = ? and url = ?',
+        'SELECT short_path FROM urls WHERE hash = %s and url = %s',
         (url_hash, url)
     )
     row = cursor.fetchone()
     short_path = None
     if row is None:
         cursor.execute(
-            'INSERT INTO urls (url, hash) VALUES (?, ?)', (url, url_hash))
-        ins_id = cursor.lastrowid
+            'INSERT INTO urls (url, hash) VALUES (%s, %s) RETURNING id',
+            (url, url_hash))
+        row = cursor.fetchone() # TODO: Catch an error here and rollback?
+        ins_id = row['id']
         short_path = id_to_b64(ins_id)
+        print('short_path', short_path)
         cursor.execute(
-            'UPDATE urls SET short_path = ? WHERE id = ?',
+            'UPDATE urls SET short_path = %s WHERE id = %s',
             (short_path, ins_id))
         db.commit()
     else:
         short_path = row['short_path']
+
+    cursor.close() # TODO: Remove if not needed.
 
     return short_path
 

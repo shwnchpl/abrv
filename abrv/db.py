@@ -1,19 +1,18 @@
-import sqlite3
 
 import click
+import psycopg2 as pg2
+
 from flask import current_app, g
 from flask.cli import with_appcontext
+from psycopg2.extras import DictCursor
 
 
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
+        g.db = pg2.connect(
+            **current_app.config['DATABASE'],
         )
-        g.db.row_factory = sqlite3.Row
-
-    # TODO: Activate WAL on this connection.
+        g.db.cursor_factory = DictCursor
 
     return g.db
 
@@ -28,8 +27,12 @@ def close_db(e=None):
 def init_db():
     db = get_db()
 
+    db.autocommit = True
+    cur = db.cursor()
     with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
+        cur.execute(f.read().decode('utf8'))
+    cur.close()
+    db.autocommit = False
 
 
 @click.command('init-db')
