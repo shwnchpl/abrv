@@ -2,7 +2,9 @@ import binascii
 
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
-from flask import Blueprint, redirect, request, flash, render_template, g
+from flask import (
+    Blueprint, redirect, request, flash, render_template, g, abort
+)
 
 from .db import get_db
 
@@ -26,33 +28,30 @@ def register_new_url():
                 g.most_recent_short = '{}{}'.format(request.url_root,
                                                     short_path)
         else:
-            # TODO: Use a real error?
-            flash("URL is required.")
+            abort(400) # Bad request.
 
     return render_template('base.html')
 
 
 @bp.route('/<string:id_b64>')
 def process_url_req(id_b64):
-    # FIXME: Use real 404
-    error_res = 'You requested an invalid id.'
     try:
         url_id = b64_to_id(id_b64)
     except RuntimeError:
-        return error_res
+        abort(404) # TODO: Should this really be 404?
 
     db = get_db()
     try:
         cursor = db.cursor()
         cursor.execute('SELECT url FROM urls WHERE id = %s', (url_id,))
     except OverflowError:
-        return error_res
+        abort(404) # TODO: Should this really be 404?
 
     row = cursor.fetchone()
     cursor.close() # TODO: Remove if not needed.
 
     if row is None:
-        return error_res
+        abort(404) # TODO: Should this really be 404?
 
     return redirect(
         'http://' + row['url'] if row['url'].find('://') == -1 else row['url']

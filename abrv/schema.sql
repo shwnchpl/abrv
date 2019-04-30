@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS i_to_wsb64;
 CREATE TABLE urls (
   id BIGSERIAL PRIMARY KEY,
   url TEXT NOT NULL,
-  hash BIGINT NOT NULL,
+  hash BIGINT NOT NULL, /* TODO: Could we just use a hash index on url? */
   short_path VARCHAR(32) NOT NULL
 );
 
