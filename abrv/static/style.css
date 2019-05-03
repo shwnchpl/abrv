@@ -35,21 +35,6 @@
   --url-entry-bar-focus-text-color:     var(--main-bg-color);
 }
 
-/* TODO: remove this code.
-:root {
-  --main-bg-color:                      #ededed;
-  --main-text-color:                    #1d2731;
-  --link-color:                         #111111;
-  --link-visited-color:                 var(--link-color);
-  --link-hover-color:                   #cbcbcb;
-  --link-active-color:                  var(--link-hover-color);
-  --url-entry-bar-bg-color:             #cbcbcb;
-  --url-entry-bar-border-color:         #d0cfce;
-  --url-entry-bar-focus-border-color:   var(--main-text-color);
-  --url-entry-bar-focus-text-color:     var(--main-text-color);
-}
-*/
-
 body{
   padding-top: 15em;
   background-color: var(--main-bg-color);
