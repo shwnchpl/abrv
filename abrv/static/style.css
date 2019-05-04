@@ -37,8 +37,37 @@
 }
 
 body{
-  padding-top: 15em;
   background-color: var(--main-bg-color);
+  height: 100vh;
+  margin: 0;
+}
+
+#wrapper {
+  color: var(--main-text-color);
+  font-family: Monospace;
+  font-size: 200%;
+  margin: auto;
+  max-width: 960px;
+  min-height: 100%;
+  position: relative;
+  text-align: center;
+  word-break: break-all;
+}
+
+#content {
+  min-height: 70vh;
+  padding-bottom: 10vh;
+  padding-top: 20vh;
+}
+
+footer {
+  position: absolute;
+  font-size: 0.7em;
+  clear: both;
+  bottom: 0;
+  padding-top: 6.5vh;
+  min-height: 3.5vh;
+  width: 100%;
 }
 
 a:link {
@@ -55,16 +84,6 @@ a:hover {
 
 a:active {
     color: var(--link-active-color);
-}
-
-.content {
-  text-align: center;
-  font-size: 200%;
-  font-family: Monospace;
-  color: var(--main-text-color);
-  max-width: 960px;
-  word-break: break-all;
-  margin: auto;
 }
 
 .url-entry-container {
