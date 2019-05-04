@@ -5,13 +5,13 @@ DROP FUNCTION IF EXISTS i_to_wsb64(BIGINT);
 CREATE TABLE urls (
   id BIGSERIAL PRIMARY KEY,
   url TEXT NOT NULL,
-  hash BIGINT NOT NULL, /* TODO: Could we just use a hash index on url? */
+  hash BIGINT NOT NULL,
   short_path TEXT NOT NULL
 );
 
 CREATE INDEX url_hash_index ON urls (hash);
 
-CREATE FUNCTION i_to_wsb64(BIGINT) RETURNS VARCHAR(32) AS
+CREATE FUNCTION i_to_wsb64(BIGINT) RETURNS TEXT AS
 $$
     SELECT translate(encode(decode(padded_hex, 'hex'), 'base64'), '+/=', '-_')
     FROM (
