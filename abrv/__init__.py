@@ -1,5 +1,7 @@
 import os
 
+from getpass import getuser
+
 from flask import Flask
 
 from . import db
@@ -8,6 +10,14 @@ from . import url
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE={
+            'database': 'abrv',
+            'user': getuser(),
+            'password': '',
+        }
+    )
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
