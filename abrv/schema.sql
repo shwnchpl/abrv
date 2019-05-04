@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS urls;
 DROP INDEX IF EXISTS url_hash_index;
-DROP FUNCTION IF EXISTS i_to_wsb64;
+DROP FUNCTION IF EXISTS i_to_wsb64(BIGINT);
 
 CREATE TABLE urls (
   id BIGSERIAL PRIMARY KEY,
   url TEXT NOT NULL,
   hash BIGINT NOT NULL, /* TODO: Could we just use a hash index on url? */
-  short_path VARCHAR(32) NOT NULL
+  short_path TEXT NOT NULL
 );
 
 CREATE INDEX url_hash_index ON urls (hash);
@@ -23,5 +23,4 @@ $$
 $$
 LANGUAGE SQL
 IMMUTABLE
-LEAKPROOF
 STRICT;
