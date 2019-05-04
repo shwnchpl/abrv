@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serv abrv
+After=network.target
+
+[Service]
+User=%i
+Group=www-data
+WorkingDirectory=/home/%i/abrv
+Environment="PATH=/home/%i/abrv/venv/bin"
+ExecStart=/home/%i/abrv/venv/bin/uwsgi --ini abrv.ini
+
+[Install]
+WantedBy=multi-user.target

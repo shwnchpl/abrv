@@ -1,0 +1,6 @@
+SECRET_KET = 'SECRET'
+DATABASE = {
+  'database': 'abrv',
+  'user': 'USERNAME',
+  'password': 'PASSWORD',
+}
