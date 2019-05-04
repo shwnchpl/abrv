@@ -1,4 +1,5 @@
-/* Colorscheme: flat-ui TODO: attribute */
+/* Colors are based on the colors used by the flat-ui-mintty
+   colorscheme: https://github.com/geekjuice/flat-ui-mintty. */
 :root {
   --color-blk-f:          #2c3e50;
   --color-blk-b:          #34495e;
@@ -56,16 +57,17 @@ a:active {
     color: var(--link-active-color);
 }
 
-.content{
+.content {
   text-align: center;
   font-size: 200%;
   font-family: Monospace;
   color: var(--main-text-color);
-  max-width: 960px; /* TODO: Prevent very long text from running off screen? */
+  max-width: 960px;
+  word-break: break-all;
   margin: auto;
 }
 
-.url-entry-container{
+.url-entry-container {
   width: 80%;
   display: block;
   margin: 0 auto;
@@ -82,7 +84,7 @@ input#url-entry-bar {
   font-size: 1.5rem;
   border: 3px solid var(--url-entry-bar-border-color);
   outline: none;
-  font-family: Monospace; /* TODO: Figure out why this needs to be specified here as well. */
+  font-family: inherit;
 }
 
 input#url-entry-bar:focus {
