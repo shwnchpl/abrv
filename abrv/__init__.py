@@ -20,7 +20,10 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
+        try:
+            app.config.from_pyfile('config.py', silent=False)
+        except FileNotFoundError:
+            app.logger.warning('Running with insecure built-in configuration.')
     else:
         app.config.from_mapping(test_config)
 
